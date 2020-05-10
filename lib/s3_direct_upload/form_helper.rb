@@ -1,10 +1,14 @@
+# maybe not needed, will check later on
+require 'securerandom'
+
 module S3DirectUpload
   module UploadHelper
     def s3_uploader_form(options = {}, &block)
       uploader = S3Uploader.new(options)
       content_tag(:div, uploader.wrapper_options) do
         uploader.fields.map do |name, value|
-          hidden_field_tag(name, value)
+          hidden_input_id = "#{uploader.wrapper_options[:id]}_#{name}"
+          hidden_field_tag(hidden_input_id, value)
         end.join.html_safe + capture(&block)
       end
     end
@@ -32,6 +36,9 @@ module S3DirectUpload
           key: key,
           server_side_encryption: nil
         )
+        # If no id was given by user to differentiate forms on current page
+        # we need to provide one as a safety measure
+        @options[:id] = SecureRandom.hex
       end
 
       def wrapper_options
