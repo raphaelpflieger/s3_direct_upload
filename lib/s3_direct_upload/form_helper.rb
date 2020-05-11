@@ -7,7 +7,7 @@ module S3DirectUpload
       uploader = S3Uploader.new(options)
       content_tag(:div, uploader.wrapper_options) do
         uploader.fields.map do |name, value|
-          hidden_field_tag(name, value, {:id => "#{uploader.wrapper_options[:id]}_#{name}", :class => "s3_direct_upload_form"})
+          hidden_field_tag(name, value, {:id => "#{uploader.wrapper_options[:id]}_#{name}"})
         end.join.html_safe + capture(&block)
       end
     end
@@ -37,7 +37,12 @@ module S3DirectUpload
         )
         # If no id was given by user to differentiate forms on current page
         # we need to provide one as a safety measure
-        @options[:id] = SecureRandom.hex
+        if !@options[:id]
+          @options[:id] = SecureRandom.hex
+          @options[:form_id] = "#{@options[:form_id]}_form"
+        else
+          @options[:form_id] = @options[:id]
+        end
       end
 
       def wrapper_options
