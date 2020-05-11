@@ -7,7 +7,7 @@ module S3DirectUpload
       uploader = S3Uploader.new(options)
       content_tag(:div, uploader.wrapper_options) do
         uploader.fields.map do |name, value|
-          hidden_field_tag(name, value, :id => "#{uploader.wrapper_options[:id]}_#{name}")
+          hidden_field_tag(name, value, {:id => "#{uploader.wrapper_options[:id]}_#{name}", :class => "s3_direct_upload_form"})
         end.join.html_safe + capture(&block)
       end
     end
